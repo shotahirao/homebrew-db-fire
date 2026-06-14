@@ -1,0 +1,52 @@
+name: Update Cask
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  update-cask:
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout tap
+        uses: actions/checkout@v4
+
+      - name: Get latest release
+        id: release
+        run: |
+          LATEST=$(gh release view --repo shotahirao/db-fire --json tagName -q '.tagName')
+          echo "version=${LATEST#v}" >> "$GITHUB_OUTPUT"
+          echo "tag=${LATEST}" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download DMG and compute sha256
+        id: sha
+        run: |
+          VERSION="${{ steps.release.outputs.version }}"
+          URL="https://github.com/shotahirao/db-fire/releases/download/v${VERSION}/db-fire_${VERSION}_aarch64.dmg"
+          curl -L -o db-fire.dmg "$URL"
+          SHA=$(shasum -a 256 db-fire.dmg | awk '{print $1}')
+          echo "sha256=${SHA}" >> "$GITHUB_OUTPUT"
+
+      - name: Update cask
+        run: |
+          VERSION="${{ steps.release.outputs.version }}"
+          SHA="${{ steps.sha.outputs.sha256 }}"
+          sed -i '' "s/version \".*\"/version \"${VERSION}\"/" Casks/db-fire.rb
+          sed -i '' "s/sha256 \".*\"/sha256 \"${SHA}\"/" Casks/db-fire.rb
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Casks/db-fire.rb
+          if git diff --cached --quiet; then
+            echo "No changes"
+          else
+            git commit -m "Update db-fire to ${{ steps.release.outputs.version }}"
+            git push
+          fi
