@@ -1,6 +1,6 @@
 cask "db-fire" do
   version "0.1.11"
-  sha256 "1ec9edf5135ab2ab503fd1f171451c8669137cb70cb545cd21c15a50057863b7"
+  sha256 "628f1ce601db3a6eece1e4819d4e033b9a50d29778c0a5fc0defbac76bf59d96"
 
   url "https://github.com/shotahirao/db-fire/releases/download/v#{version}/db-fire_#{version}_aarch64.dmg"
   name "db-fire"
