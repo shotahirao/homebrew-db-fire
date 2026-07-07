@@ -7,6 +7,8 @@ cask "db-fire" do
   desc "A fast, lightweight, cross-platform database client built with Tauri"
   homepage "https://github.com/shotahirao/db-fire"
 
+  deprecate! date: "2026-07-07", because: "it has moved to the shotahirao/tap tap; run `brew uninstall --cask db-fire && brew install --cask shotahirao/tap/db-fire`"
+
   livecheck do
     url :url
     regex(/^v?(\d+(?:\.\d+)+)$/i)

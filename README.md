@@ -1,32 +1,15 @@
-# shotahirao/db-fire Homebrew Tap
+# shotahirao/db-fire Homebrew Tap (DEPRECATED)
 
-A Homebrew tap for [db-fire](https://github.com/shotahirao/db-fire), a fast, lightweight, cross-platform database client built with Tauri.
+> **This tap is deprecated.** The db-fire cask has moved to
+> [shotahirao/homebrew-tap](https://github.com/shotahirao/homebrew-tap).
 
-## Installation
-
-```bash
-brew tap shotahirao/db-fire
-brew install --cask db-fire
-```
-
-Or in one command:
+## Migration
 
 ```bash
-brew install --cask shotahirao/db-fire/db-fire
+brew uninstall --cask db-fire
+brew untap shotahirao/db-fire
+brew install --cask shotahirao/tap/db-fire
 ```
 
-## Note
-
-db-fire is currently not signed with an Apple Developer ID. On macOS, you may need to remove the quarantine attribute after installation:
-
-```bash
-sudo xattr -d com.apple.quarantine /Applications/db-fire.app
-```
-
-## Updates
-
-This cask is marked as `auto_updates true` because db-fire includes a built-in updater. You can also run:
-
-```bash
-brew upgrade --greedy db-fire
-```
+The new cask removes the macOS quarantine attribute automatically after
+installation, so the app opens without the Gatekeeper "damaged app" warning.
